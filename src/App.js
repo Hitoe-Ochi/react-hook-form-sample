@@ -3,6 +3,7 @@ import { TextField } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Box } from "@mui/material";
 import { Button } from "@mui/material";
+import { DevTool } from "@hookform/devtools";
 
 const defaultValues = {
   TextField: "",
@@ -15,7 +16,8 @@ export default function App() {
     control,
     setValue,
     formState: { errors },
-    getValues
+    getValues,
+    reset
   } = useForm({
     mode: "onChange",
     defaultValues,
@@ -23,17 +25,29 @@ export default function App() {
 
   return (
     <>
-      <Box sx={{margin: 2}}>
-        <Button variant="contained" onClick={() => setValue("TextField", "User A")}>
-          {" "}
+      <Box sx={{ margin: 2 }}>
+        <Button
+          variant="contained"
+          onClick={() =>
+            setValue("TextField", "User A", { shouldValidate: true })
+          }
+        >
           User A
         </Button>
-        <Button variant="contained" onClick={() => setValue("TextField", "User B")}>
+        <Button
+          variant="contained"
+          onClick={() =>
+            setValue("TextField", "User B", { shouldValidate: true })
+          }
+        >
           User B
         </Button>
       </Box>
-      <Box sx={{padding: 2}}>
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+      <Box sx={{ padding: 2 }}>
+        <form onSubmit={handleSubmit((data) => {
+          console.log(data)
+          // reset(defaultValues)
+          })}>
           <Box sx={{ display: "flex", textAlign: "center", margin: 2 }}>
             <label>MUI TextField</label>
             <Controller
@@ -82,9 +96,9 @@ export default function App() {
           </Button>
         </form>
 
-        <div>
-          {getValues("TextField")}
-        </div>
+        <div>{getValues("TextField")}</div>
+
+        <DevTool control={control} />
       </Box>
     </>
   );
